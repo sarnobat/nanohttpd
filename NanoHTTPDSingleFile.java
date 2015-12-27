@@ -1233,86 +1233,6 @@ public abstract class NanoHTTPDSingleFile {
 	 */
 	public static class Response implements Closeable {
 
-		public static interface IStatus {
-
-			String getDescription();
-
-			int getRequestStatus();
-		}
-
-		/**
-		 * Some HTTP response status codes
-		 */
-		public static enum Status implements IStatus {
-			SWITCH_PROTOCOL(101, "Switching Protocols"), OK(200, "OK"), CREATED(201, "Created"), ACCEPTED(
-					202, "Accepted"), NO_CONTENT(204, "No Content"), PARTIAL_CONTENT(206,
-					"Partial Content"), REDIRECT(301, "Moved Permanently"), NOT_MODIFIED(304,
-					"Not Modified"), BAD_REQUEST(400, "Bad Request"), UNAUTHORIZED(401,
-					"Unauthorized"), FORBIDDEN(403, "Forbidden"), NOT_FOUND(404, "Not Found"), METHOD_NOT_ALLOWED(
-					405, "Method Not Allowed"), NOT_ACCEPTABLE(406, "Not Acceptable"), REQUEST_TIMEOUT(
-					408, "Request Timeout"), CONFLICT(409, "Conflict"), RANGE_NOT_SATISFIABLE(416,
-					"Requested Range Not Satisfiable"), INTERNAL_ERROR(500, "Internal Server Error"), NOT_IMPLEMENTED(
-					501, "Not Implemented"), UNSUPPORTED_HTTP_VERSION(505,
-					"HTTP Version Not Supported");
-
-			private final int requestStatus;
-
-			private final String description;
-
-			Status(int requestStatus, String description) {
-				this.requestStatus = requestStatus;
-				this.description = description;
-			}
-
-			@Override
-			public String getDescription() {
-				return "" + this.requestStatus + " " + this.description;
-			}
-
-			@Override
-			public int getRequestStatus() {
-				return this.requestStatus;
-			}
-
-		}
-
-		/**
-		 * Output stream that will automatically send every write to the wrapped
-		 * OutputStream according to chunked transfer:
-		 * http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1
-		 */
-		private static class ChunkedOutputStream extends FilterOutputStream {
-
-			public ChunkedOutputStream(OutputStream out) {
-				super(out);
-			}
-
-			@Override
-			public void write(int b) throws IOException {
-				byte[] data = { (byte) b };
-				write(data, 0, 1);
-			}
-
-			@Override
-			public void write(byte[] b) throws IOException {
-				write(b, 0, b.length);
-			}
-
-			@Override
-			public void write(byte[] b, int off, int len) throws IOException {
-				if (len == 0)
-					return;
-				out.write(String.format("%x\r\n", len).getBytes());
-				out.write(b, off, len);
-				out.write("\r\n".getBytes());
-			}
-
-			public void finish() throws IOException {
-				out.write("0\r\n\r\n".getBytes());
-			}
-
-		}
-
 		/**
 		 * HTTP status code after processing, e.g. "200 OK", Status.OK
 		 */
@@ -1583,6 +1503,86 @@ public abstract class NanoHTTPDSingleFile {
 
 		public void setStatus(IStatus status) {
 			this.status = status;
+		}
+		
+		public static interface IStatus {
+
+			String getDescription();
+
+			int getRequestStatus();
+		}
+
+		/**
+		 * Some HTTP response status codes
+		 */
+		public static enum Status implements IStatus {
+			SWITCH_PROTOCOL(101, "Switching Protocols"), OK(200, "OK"), CREATED(201, "Created"), ACCEPTED(
+					202, "Accepted"), NO_CONTENT(204, "No Content"), PARTIAL_CONTENT(206,
+					"Partial Content"), REDIRECT(301, "Moved Permanently"), NOT_MODIFIED(304,
+					"Not Modified"), BAD_REQUEST(400, "Bad Request"), UNAUTHORIZED(401,
+					"Unauthorized"), FORBIDDEN(403, "Forbidden"), NOT_FOUND(404, "Not Found"), METHOD_NOT_ALLOWED(
+					405, "Method Not Allowed"), NOT_ACCEPTABLE(406, "Not Acceptable"), REQUEST_TIMEOUT(
+					408, "Request Timeout"), CONFLICT(409, "Conflict"), RANGE_NOT_SATISFIABLE(416,
+					"Requested Range Not Satisfiable"), INTERNAL_ERROR(500, "Internal Server Error"), NOT_IMPLEMENTED(
+					501, "Not Implemented"), UNSUPPORTED_HTTP_VERSION(505,
+					"HTTP Version Not Supported");
+
+			private final int requestStatus;
+
+			private final String description;
+
+			Status(int requestStatus, String description) {
+				this.requestStatus = requestStatus;
+				this.description = description;
+			}
+
+			@Override
+			public String getDescription() {
+				return "" + this.requestStatus + " " + this.description;
+			}
+
+			@Override
+			public int getRequestStatus() {
+				return this.requestStatus;
+			}
+
+		}
+
+		/**
+		 * Output stream that will automatically send every write to the wrapped
+		 * OutputStream according to chunked transfer:
+		 * http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1
+		 */
+		private static class ChunkedOutputStream extends FilterOutputStream {
+
+			public ChunkedOutputStream(OutputStream out) {
+				super(out);
+			}
+
+			@Override
+			public void write(int b) throws IOException {
+				byte[] data = { (byte) b };
+				write(data, 0, 1);
+			}
+
+			@Override
+			public void write(byte[] b) throws IOException {
+				write(b, 0, b.length);
+			}
+
+			@Override
+			public void write(byte[] b, int off, int len) throws IOException {
+				if (len == 0)
+					return;
+				out.write(String.format("%x\r\n", len).getBytes());
+				out.write(b, off, len);
+				out.write("\r\n".getBytes());
+			}
+
+			public void finish() throws IOException {
+				out.write("0\r\n\r\n".getBytes());
+			}
+
 		}
 	}
 
