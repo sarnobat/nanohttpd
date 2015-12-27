@@ -556,39 +556,24 @@ public abstract class NanoHTTPDSingleFile {
 	protected class HTTPSession implements IHTTPSession {
 
 		private static final int REQUEST_BUFFER_LEN = 512;
-
 		private static final int MEMORY_STORE_LIMIT = 1024;
-
 		public static final int BUFSIZE = 8192;
-
 		public static final int MAX_HEADER_SIZE = 1024;
 
 		private final TempFileManager tempFileManager;
-
 		private final OutputStream outputStream;
-
 		private final BufferedInputStream inputStream;
 
 		private int splitbyte;
-
 		private int rlen;
-
 		private String uri;
-
 		private Method method;
-
 		private Map<String, String> parms;
-
 		private Map<String, String> headers;
-
 		private CookieHandler cookies;
-
 		private String queryParameterString;
-
 		private String remoteIp;
-
 		private String remoteHostname;
-
 		private String protocolVersion;
 
 		public HTTPSession(TempFileManager tempFileManager, InputStream inputStream,
