@@ -2931,5 +2931,6 @@ public abstract class NanoHTTPDSingleFile {
 	
 	public static void main(String[] args) {
 		SimpleWebServer.run(args);
+		System.out.println("Go to http://localhost:8080");
 	}
 }
