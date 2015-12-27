@@ -2846,6 +2846,10 @@ public abstract class NanoHTTPDSingleFile {
 		 * Starts as a standalone file server and waits for Enter.
 		 */
 		public static void main(String[] args) {
+			run(args);
+		}
+
+		private static void run(String[] args) {
 			// Defaults
 			int port = 8080;
 
@@ -2924,5 +2928,8 @@ public abstract class NanoHTTPDSingleFile {
 		}
 
 	}
-
+	
+	public static void main(String[] args) {
+		SimpleWebServer.run(args);
+	}
 }
