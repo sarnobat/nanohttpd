@@ -885,13 +885,7 @@ public abstract class NanoHTTPDSingleFile {
 						&& (connection == null || !connection.matches("(?i).*close.*"));
 
 				// Ok, now do the serve()
-
-				// TODO: long body_size = getBodySize();
-				// TODO: long pos_before_serve = this.inputStream.totalRead()
-				// (requires implementation for totalRead())
 				r = serve(this);
-				// TODO: this.inputStream.skip(body_size -
-				// (this.inputStream.totalRead() - pos_before_serve))
 
 				if (r == null) {
 					throw new ResponseException(Response.Status.INTERNAL_ERROR,
