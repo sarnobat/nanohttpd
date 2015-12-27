@@ -1360,6 +1360,7 @@ public abstract class NanoHTTPDSingleFile {
 		 * Headers for the HTTP response. Use addHeader() to add lines. the
 		 * lowercase map is automaticaly kept up to date.
 		 */
+		@SuppressWarnings("serial")
 		private final Map<String, String> header = new HashMap<String, String>() {
 
 			public String put(String key, String value) {
@@ -1769,6 +1770,7 @@ public abstract class NanoHTTPDSingleFile {
 		return MIME_TYPES;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void loadMimeTypes(Map<String, String> result, String resourceName) {
 		try {
 			Enumeration<URL> resources = NanoHTTPDSingleFile.class.getClassLoader().getResources(
@@ -2578,6 +2580,7 @@ public abstract class NanoHTTPDSingleFile {
 			return response;
 		}
 
+		@SuppressWarnings("resource")
 		private Response respond(Map<String, String> headers, IHTTPSession session, String uri) {
 			// First let's handle CORS OPTION query
 			Response r;
@@ -2846,10 +2849,6 @@ public abstract class NanoHTTPDSingleFile {
 		 * Starts as a standalone file server and waits for Enter.
 		 */
 		public static void main(String[] args) {
-			run(args);
-		}
-
-		private static void run(String[] args) {
 			// Defaults
 			int port = 8080;
 
@@ -2928,9 +2927,5 @@ public abstract class NanoHTTPDSingleFile {
 		}
 
 	}
-	
-	public static void main(String[] args) {
-		SimpleWebServer.run(args);
-		System.out.println("Go to http://localhost:8080");
-	}
+
 }
