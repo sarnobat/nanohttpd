@@ -99,9 +99,6 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
-import fi.iki.elonen.NanoHTTPDSingleFile.Response.IStatus;
-import fi.iki.elonen.NanoHTTPDSingleFile.Response.Status;
-
 /**
  * A simple, tiny, nicely embeddable HTTP server in Java
  * <p/>
@@ -1215,7 +1212,7 @@ public abstract class NanoHTTPDSingleFile {
      */
     public static class Response implements Closeable {
 
-        public interface IStatus {
+        public static interface IStatus {
 
             String getDescription();
 
@@ -1225,7 +1222,7 @@ public abstract class NanoHTTPDSingleFile {
         /**
          * Some HTTP response status codes
          */
-        public enum Status implements IStatus {
+        public static enum Status implements IStatus {
             SWITCH_PROTOCOL(101, "Switching Protocols"),
             OK(200, "OK"),
             CREATED(201, "Created"),
@@ -2025,21 +2022,21 @@ public abstract class NanoHTTPDSingleFile {
     /**
      * Create a response with unknown length (using HTTP 1.1 chunking).
      */
-    public static Response newChunkedResponse(IStatus status, String mimeType, InputStream data) {
+    public static Response newChunkedResponse(Response.IStatus status, String mimeType, InputStream data) {
         return new Response(status, mimeType, data, -1);
     }
 
     /**
      * Create a response with known length.
      */
-    public static Response newFixedLengthResponse(IStatus status, String mimeType, InputStream data, long totalBytes) {
+    public static Response newFixedLengthResponse(Response.IStatus status, String mimeType, InputStream data, long totalBytes) {
         return new Response(status, mimeType, data, totalBytes);
     }
 
     /**
      * Create a text response with known length.
      */
-    public static Response newFixedLengthResponse(IStatus status, String mimeType, String txt) {
+    public static Response newFixedLengthResponse(Response.IStatus status, String mimeType, String txt) {
         if (txt == null) {
             return newFixedLengthResponse(status, mimeType, new ByteArrayInputStream(new byte[0]), 0);
         } else {
@@ -2058,7 +2055,7 @@ public abstract class NanoHTTPDSingleFile {
      * Create a text response with known length.
      */
     public static Response newFixedLengthResponse(String msg) {
-        return newFixedLengthResponse(Status.OK, NanoHTTPDSingleFile.MIME_HTML, msg);
+        return newFixedLengthResponse(Response.Status.OK, NanoHTTPDSingleFile.MIME_HTML, msg);
     }
 
     /**
@@ -2492,7 +2489,7 @@ public abstract class NanoHTTPDSingleFile {
             return msg.toString();
         }
 
-        public static Response newFixedLengthResponse(IStatus status, String mimeType, String message) {
+        public static Response newFixedLengthResponse(Response.IStatus status, String mimeType, String message) {
             Response response = NanoHTTPDSingleFile.newFixedLengthResponse(status, mimeType, message);
             response.addHeader("Accept-Ranges", "bytes");
             return response;
